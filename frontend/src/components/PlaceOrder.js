@@ -28,24 +28,22 @@ const PlaceOrder = () => {
   const navigate = useNavigate();
 
   const addToCart = (item) => {
-    const existingItem = cart.find((cartItem) => cartItem.name === item.name);
-    if (existingItem) {
-      setCart(
-        cart.map((cartItem) =>
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((cartItem) => cartItem.name === item.name);
+      if (existingItem) {
+        return prevCart.map((cartItem) =>
           cartItem.name === item.name
             ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
-        )
-      );
-    } else {
-      setCart([...cart, { ...item, quantity: 1 }]);
-    }
+        );
+      }
+      return [...prevCart, { ...item, quantity: 1 }];
+    });
   };
 
   const removeFromCart = (itemName) => {
-    setCart(cart.filter((cartItem) => cartItem.name !== itemName));
+    setCart((prevCart) => prevCart.filter((cartItem) => cartItem.name !== itemName));
   };
-
 
   const handlePlaceOrder = () => {
     if (cart.length === 0) {
@@ -61,10 +59,12 @@ const PlaceOrder = () => {
         <h1>R.M.S.</h1>
         <h2>Place Order</h2>
 
+        {/* Search Menu Section */}
         <div className="menu-section">
           <button onClick={() => setShowMenu(!showMenu)}>Search Menu</button>
         </div>
 
+        {/* Menu Items */}
         {showMenu && (
           <div className="food-items">
             {Object.entries(menuItems).map(([category, items]) => (
@@ -80,26 +80,8 @@ const PlaceOrder = () => {
             ))}
           </div>
         )}
-        <div className="menu-section">
-          <button>Logo</button>
-          <input type="text" placeholder="Search Menu" />
-          <button>Cart Icon</button>
-        </div>
 
-        <div className="food-items">
-          {Object.entries(menuItems).map(([category, items]) => (
-            <div key={category}>
-              <h3>{category}</h3>
-              {items.map((item) => (
-                <div key={item.name}>
-                  <span>{item.name} - ${item.price}</span>
-                  <button onClick={() => addToCart(item)}>Add to Cart</button>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-
+        {/* Cart Summary */}
         <div className="cart-summary">
           <h3>Cart Summary</h3>
           {cart.length === 0 ? (
@@ -116,54 +98,37 @@ const PlaceOrder = () => {
           )}
         </div>
 
+        {/* Pickup or Delivery Selection */}
         <div className="order-options">
           <label>Select: </label>
           <button onClick={() => setPickup(true)}>Pickup</button>
           <button onClick={() => setPickup(false)}>Delivery</button>
-          {!pickup && (
+
+          {!pickup ? (
             <input
               type="text"
               placeholder="Enter Delivery Address"
               value={deliveryAddress}
               onChange={(e) => setDeliveryAddress(e.target.value)}
             />
+          ) : (
+            <p>Pickup Location: 123 Main St</p>
           )}
-          {pickup && <p>Pickup Location: 123 Main St</p>}
         </div>
 
+        {/* Payment Methods */}
         <div className="payment-methods">
           <label>Payment Method:</label>
-          <button onClick={() => navigate("/make-payment")}>Proceed to Payment</button>
+          <button onClick={handlePlaceOrder}>Proceed to Payment</button>
         </div>
 
-        <button className="place-order" onClick={handlePlaceOrder}>Place Order</button>
+        {/* Order Confirmation */}
+        <button className="place-order" onClick={handlePlaceOrder}>
+          Place Order
+        </button>
 
         <div className="order-confirmation">
           <button onClick={() => navigate("/receive-invoice")}>Receive Invoice</button>
-
-        <div className="order-options">
-          <label>Select: </label>
-          <button>Pickup</button>
-          <button>Delivery</button>
-          <input type="text" placeholder="Address Input" />
-        </div>
-
-
-        <div className="payment-methods">
-          <label>Payment Method:</label>
-          <button>Credit Card</button>
-          <button>Cash</button>
-        </div>
-
-
-        <button className="place-order">Place Order</button>
-
-
-        <div className="order-confirmation">
-          <p>Order Confirmed!!</p>
-          <p>Your order is on the way!!</p>
-          <button>Modify Order</button>
-          <button>Track Order</button>
         </div>
       </div>
     </div>
