@@ -6,6 +6,7 @@ import Register from "./components/Register";
 import ForgotPassword from "./components/ForgotPassword"; 
 import PlaceOrder from "./components/PlaceOrder";
 import MakePayment from "./components/MakePayment";
+
 import ManagerDashboard from './Manager/ManagerDashboard';
 import AddItem from "./Manager/AddItem";
 import Navbar from './Navbar';
@@ -24,7 +25,6 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/make-payment" element={<MakePayment />} />
-
       </Routes>
     </Router>
   );

@@ -46,6 +46,7 @@ const PlaceOrder = () => {
     setCart(cart.filter((cartItem) => cartItem.name !== itemName));
   };
 
+
   const handlePlaceOrder = () => {
     if (cart.length === 0) {
       alert("Your cart is empty. Please add items before placing an order.");
@@ -79,6 +80,25 @@ const PlaceOrder = () => {
             ))}
           </div>
         )}
+        <div className="menu-section">
+          <button>Logo</button>
+          <input type="text" placeholder="Search Menu" />
+          <button>Cart Icon</button>
+        </div>
+
+        <div className="food-items">
+          {Object.entries(menuItems).map(([category, items]) => (
+            <div key={category}>
+              <h3>{category}</h3>
+              {items.map((item) => (
+                <div key={item.name}>
+                  <span>{item.name} - ${item.price}</span>
+                  <button onClick={() => addToCart(item)}>Add to Cart</button>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
 
         <div className="cart-summary">
           <h3>Cart Summary</h3>
@@ -120,6 +140,30 @@ const PlaceOrder = () => {
 
         <div className="order-confirmation">
           <button onClick={() => navigate("/receive-invoice")}>Receive Invoice</button>
+
+        <div className="order-options">
+          <label>Select: </label>
+          <button>Pickup</button>
+          <button>Delivery</button>
+          <input type="text" placeholder="Address Input" />
+        </div>
+
+
+        <div className="payment-methods">
+          <label>Payment Method:</label>
+          <button>Credit Card</button>
+          <button>Cash</button>
+        </div>
+
+
+        <button className="place-order">Place Order</button>
+
+
+        <div className="order-confirmation">
+          <p>Order Confirmed!!</p>
+          <p>Your order is on the way!!</p>
+          <button>Modify Order</button>
+          <button>Track Order</button>
         </div>
       </div>
     </div>
