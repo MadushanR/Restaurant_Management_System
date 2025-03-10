@@ -1,0 +1,71 @@
+/* Background Image */
+.login-container {
+    background: url('https://www.pexels.com/photo/chef-preparing-vegetable-dish-on-tree-slab-1267320/') no-repeat center center/cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Login Box */
+  .login-box {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 30px;
+    text-align: center;
+    border-radius: 10px;
+    width: 350px;
+  }
+  
+  h1 {
+    font-family: "Georgia", serif;
+    font-size: 36px;
+  }
+  
+  h2 {
+    font-size: 22px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    width: 100%;
+    padding: 10px;
+    background: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  button:hover {
+    background: #555;
+  }
+  
+  /* Register Link */
+  .register-link {
+    color: red;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  .remember-me {
+    display: flex;
+    align-items: center;
+    gap: 5px; 
+  }
+  
+  .remember-me input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  
+  .remember-me label {
+    font-size: 14px;
+    cursor: pointer;
+  }
