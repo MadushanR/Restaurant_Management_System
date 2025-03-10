@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./PlaceOrder.css";
 
 const menuItems = {
@@ -21,8 +22,11 @@ const menuItems = {
 
 const PlaceOrder = () => {
   const [cart, setCart] = useState([]);
+  const [pickup, setPickup] = useState(false);
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
+  const navigate = useNavigate();
 
-  // Function to add item to cart
   const addToCart = (item) => {
     const existingItem = cart.find((cartItem) => cartItem.name === item.name);
     if (existingItem) {
@@ -38,9 +42,17 @@ const PlaceOrder = () => {
     }
   };
 
-  // Function to remove an item from cart
   const removeFromCart = (itemName) => {
     setCart(cart.filter((cartItem) => cartItem.name !== itemName));
+  };
+
+
+  const handlePlaceOrder = () => {
+    if (cart.length === 0) {
+      alert("Your cart is empty. Please add items before placing an order.");
+      return;
+    }
+    navigate("/make-payment");
   };
 
   return (
@@ -49,16 +61,31 @@ const PlaceOrder = () => {
         <h1>R.M.S.</h1>
         <h2>Place Order</h2>
 
-        {/* Menu Header */}
+        <div className="menu-section">
+          <button onClick={() => setShowMenu(!showMenu)}>Search Menu</button>
+        </div>
+
+        {showMenu && (
+          <div className="food-items">
+            {Object.entries(menuItems).map(([category, items]) => (
+              <div key={category}>
+                <h3>{category}</h3>
+                {items.map((item) => (
+                  <div key={item.name}>
+                    <span>{item.name} - ${item.price}</span>
+                    <button onClick={() => addToCart(item)}>Add to Cart</button>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
         <div className="menu-section">
           <button>Logo</button>
           <input type="text" placeholder="Search Menu" />
           <button>Cart Icon</button>
         </div>
 
-        
-
-        {/* Menu Items */}
         <div className="food-items">
           {Object.entries(menuItems).map(([category, items]) => (
             <div key={category}>
@@ -73,7 +100,6 @@ const PlaceOrder = () => {
           ))}
         </div>
 
-        {/* Cart Summary */}
         <div className="cart-summary">
           <h3>Cart Summary</h3>
           {cart.length === 0 ? (
@@ -90,7 +116,31 @@ const PlaceOrder = () => {
           )}
         </div>
 
-        {/* Order Options */}
+        <div className="order-options">
+          <label>Select: </label>
+          <button onClick={() => setPickup(true)}>Pickup</button>
+          <button onClick={() => setPickup(false)}>Delivery</button>
+          {!pickup && (
+            <input
+              type="text"
+              placeholder="Enter Delivery Address"
+              value={deliveryAddress}
+              onChange={(e) => setDeliveryAddress(e.target.value)}
+            />
+          )}
+          {pickup && <p>Pickup Location: 123 Main St</p>}
+        </div>
+
+        <div className="payment-methods">
+          <label>Payment Method:</label>
+          <button onClick={() => navigate("/make-payment")}>Proceed to Payment</button>
+        </div>
+
+        <button className="place-order" onClick={handlePlaceOrder}>Place Order</button>
+
+        <div className="order-confirmation">
+          <button onClick={() => navigate("/receive-invoice")}>Receive Invoice</button>
+
         <div className="order-options">
           <label>Select: </label>
           <button>Pickup</button>
@@ -98,17 +148,17 @@ const PlaceOrder = () => {
           <input type="text" placeholder="Address Input" />
         </div>
 
-        {/* Payment Methods */}
+
         <div className="payment-methods">
           <label>Payment Method:</label>
           <button>Credit Card</button>
           <button>Cash</button>
         </div>
 
-        {/* Place Order */}
+
         <button className="place-order">Place Order</button>
 
-        {/* Order Confirmation */}
+
         <div className="order-confirmation">
           <p>Order Confirmed!!</p>
           <p>Your order is on the way!!</p>
