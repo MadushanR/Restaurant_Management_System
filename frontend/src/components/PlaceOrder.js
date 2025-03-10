@@ -17,6 +17,7 @@ const menuItems = {
     { name: "Beer", price: 7 },
     { name: "Pop", price: 3 },
     { name: "Orange Juice", price: 5 },
+    { name: "Apple Juice", price: 5 },
   ],
 };
 
