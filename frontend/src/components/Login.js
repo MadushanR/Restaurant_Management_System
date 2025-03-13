@@ -35,7 +35,7 @@ const Login = () => {
           <button type="submit">Login</button>
         </form>
         <p>
-          <Link to="/forgot-password" className="forgot-link">Forgot Password?</Link> {/* ✅ Updated */}
+          <Link to="/forgot-password" className="forgot-link">Forgot Password?</Link>
         </p>
         <p>
           Don't have an account? <Link to="/Register" className="register-link">Register Now</Link>
