@@ -17,7 +17,6 @@ const menuItems = {
     { name: "Beer", price: 7 },
     { name: "Pop", price: 3 },
     { name: "Orange Juice", price: 5 },
-    { name: "Apple Juice", price: 5 },
   ],
 };
 
@@ -46,13 +45,9 @@ const PlaceOrder = () => {
     setCart((prevCart) => prevCart.filter((cartItem) => cartItem.name !== itemName));
   };
 
-  const handlePlaceOrder = () => {
-    if (cart.length === 0) {
-      alert("Your cart is empty. Please add items before placing an order.");
-      return;
-    }
-    navigate("/make-payment");
-  };
+  const totalAmount = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const taxAmount = totalAmount * 0.13;
+  const finalTotal = totalAmount + taxAmount;
 
   return (
     <div className="order-container">
@@ -60,12 +55,10 @@ const PlaceOrder = () => {
         <h1>R.M.S.</h1>
         <h2>Place Order</h2>
 
-        {/* Search Menu Section */}
         <div className="menu-section">
           <button onClick={() => setShowMenu(!showMenu)}>Search Menu</button>
         </div>
 
-        {/* Menu Items */}
         {showMenu && (
           <div className="food-items">
             {Object.entries(menuItems).map(([category, items]) => (
@@ -82,7 +75,6 @@ const PlaceOrder = () => {
           </div>
         )}
 
-        {/* Cart Summary */}
         <div className="cart-summary">
           <h3>Cart Summary</h3>
           {cart.length === 0 ? (
@@ -91,15 +83,17 @@ const PlaceOrder = () => {
             <ul>
               {cart.map((item) => (
                 <li key={item.name}>
-                  {item.name} - ${item.price} x {item.quantity}
+                  {item.quantity} x {item.name} - ${item.price * item.quantity}
                   <button onClick={() => removeFromCart(item.name)}>Remove</button>
                 </li>
               ))}
             </ul>
           )}
+          <h4>Subtotal: ${totalAmount.toFixed(2)}</h4>
+          <h4>Tax (13%): ${taxAmount.toFixed(2)}</h4>
+          <h3>Total: ${finalTotal.toFixed(2)}</h3>
         </div>
 
-        {/* Pickup or Delivery Selection */}
         <div className="order-options">
           <label>Select: </label>
           <button onClick={() => setPickup(true)}>Pickup</button>
@@ -117,19 +111,21 @@ const PlaceOrder = () => {
           )}
         </div>
 
-        {/* Payment Methods */}
         <div className="payment-methods">
           <label>Payment Method:</label>
-          <button onClick={handlePlaceOrder}>Proceed to Payment</button>
+          <button onClick={() => navigate("/make-payment")}>Proceed to Payment</button>
         </div>
 
-        {/* Order Confirmation */}
-        <button className="place-order" onClick={handlePlaceOrder}>
-          Place Order
-        </button>
-
         <div className="order-confirmation">
-          <button onClick={() => navigate("/receive-invoice")}>Receive Invoice</button>
+          <button
+            onClick={() =>
+              navigate("/receive-invoice", {
+                state: { cart, totalAmount, taxAmount, finalTotal, deliveryAddress, pickup },
+              })
+            }
+          >
+            View Invoice
+          </button>
         </div>
       </div>
     </div>

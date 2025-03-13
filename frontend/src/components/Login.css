@@ -1,4 +1,4 @@
-/* Background Image */
+
 .login-container {
     background: url('https://www.pexels.com/photo/chef-preparing-vegetable-dish-on-tree-slab-1267320/') no-repeat center center/cover;
     height: 100vh;
@@ -7,7 +7,7 @@
     align-items: center;
   }
   
-  /* Login Box */
+  
   .login-box {
     background: rgba(255, 255, 255, 0.8);
     padding: 30px;
@@ -47,7 +47,7 @@
     background: #555;
   }
   
-  /* Register Link */
+ 
   .register-link {
     color: red;
     text-decoration: none;
