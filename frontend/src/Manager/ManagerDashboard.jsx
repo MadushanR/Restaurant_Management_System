@@ -11,6 +11,7 @@ const ManagerDashboard = () => {
     { id: 3, name: "Pasta", quantity: 35, sold: 20, buyPrice: "$3", sellPrice: "$6" },
     { id: 4, name: "Salad", quantity: 25, sold: 10, buyPrice: "$2.5", sellPrice: "$5.5" },
     { id: 5, name: "Soda", quantity: 60, sold: 40, buyPrice: "$1", sellPrice: "$2" },
+    { id: 6, name: "Campa-Soda", quantity: 50, sold: 20, buyPrice: "$3", sellPrice: "$4" }
   ];
 
   return (
