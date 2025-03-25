@@ -1,4 +1,4 @@
-/* Background */
+
 .login-container {
     background: url('/background.jpg') no-repeat center center/cover;
     height: 100vh;
@@ -7,7 +7,6 @@
     align-items: center;
   }
   
-  /* Register Box */
   .login-box {
     background: rgba(255, 255, 255, 0.9);
     padding: 30px;
@@ -16,8 +15,7 @@
     width: 350px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   }
-  
-  /* Title */
+
   h1 {
     font-family: "Georgia", serif;
     font-size: 36px;
@@ -29,7 +27,6 @@
     margin-bottom: 20px;
   }
   
-  /* Input Fields */
   input {
     width: 100%;
     padding: 10px;
@@ -37,8 +34,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
   }
-  
-  /* Conditions Checkbox */
+ 
   .conditions {
     display: flex;
     align-items: center;
@@ -54,7 +50,6 @@
     cursor: pointer;
   }
   
-  /* Sign Up Button */
   button {
     width: 100%;
     padding: 10px;
@@ -69,7 +64,6 @@
     background: #555;
   }
   
-  /* Login Link */
   .register-link {
     color: red;
     text-decoration: none;

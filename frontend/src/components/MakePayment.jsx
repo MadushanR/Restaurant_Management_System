@@ -25,7 +25,7 @@ const MakePayment = () => {
     
     setProcessing(true);
     setTimeout(() => {
-      const success = Math.random() > 0.3; // Simulate payment success (70% chance)
+      const success = Math.random() > 0.3; 
       setProcessing(false);
       setPaymentStatus(success ? "success" : "failed");
     }, 2000);
