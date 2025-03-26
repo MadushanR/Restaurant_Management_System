@@ -1,33 +1,75 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ManagerDashboard.css";
+import axios from 'axios';
 
-const ManagerDashboard = () => {
-  const navigate = useNavigate();
+  const ManagerDashboard = () => {
+    const navigate = useNavigate();
+    const [items, setItems] = useState([]);
+    const [form, setForm] = useState({ name: '', quantity: 0, description: '' });
 
-  const items  = [
-    { id: 1, name: "Burger", quantity: 50, sold: 30, buyPrice: "$2", sellPrice: "$5" },
-    { id: 2, name: "Pizza", quantity: 20, sold: 15, buyPrice: "$4", sellPrice: "$8" },
-    { id: 3, name: "Pasta", quantity: 35, sold: 20, buyPrice: "$3", sellPrice: "$6" },
-    { id: 4, name: "Salad", quantity: 25, sold: 10, buyPrice: "$2.5", sellPrice: "$5.5" },
-    { id: 5, name: "Soda", quantity: 60, sold: 40, buyPrice: "$1", sellPrice: "$2" },
-    { id: 6, name: "Campa-Soda", quantity: 50, sold: 20, buyPrice: "$3", sellPrice: "$4" }
-  ];
+    useEffect(() => {
+      fetchItems();
+    }, []);
 
+    const fetchItems = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/inventory');
+        setItems(response.data);
+      } catch (error) {
+        console.error("Error fetching items", error);
+      }
+    };
+  
+    const handleChange = (e) => {
+      setForm({ ...form, [e.target.name]: e.target.value });
+    };
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        const response = await axios.post('http://localhost:8080/api/inventory', form);
+        setItems([...items, response.data]);
+        setForm({ name: '', quantity: 0, description: '' });
+      } catch (error) {
+        console.error("Error adding item", error);
+      }
+    };
   return (
     <div>
       <nav className="navbar">
-        <div className="logo">Restaurant Logo</div>
         <ul className="nav-links">
-          <li>Home</li>
-          <li>Orders</li>
-          <li>Inventory</li>
-          <li>Reports</li>
-          <li>Settings</li>
+          <button><li>Home</li></button>
+          <button><li>Orders</li></button>
+          <button><li>Inventory</li></button>
+          <button><li>Reports</li></button>
+          <button><li>Settings</li></button>
         </ul>
-        <button onClick={() => navigate("/additem")}>Add Item</button>
       </nav>
+      <h1>Restaurant Inventory</h1>
 
+      <table>
+        <thead>
+          <tr>
+            <th>Item Name</th>
+            <th>Item Quantity</th>
+            <th>Item Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item) => (
+            <tr key={item.id}>
+              <td><input type="text"name="name"placeholder="Item Name"value={form.name}onChange={handleChange}required/></td>
+              <td><input type="number"name="quantity"placeholder="Quantity"value={form.quantity}onChange={handleChange}required/></td>
+              <td><input type="text"name="description"placeholder="Description"value={form.description}onChange={handleChange}/></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <form onSubmit={handleSubmit}> 
+        <button type="submit">Add Item</button>
+      </form>
+      <h2>Inventory List</h2>
       <table>
         <thead>
           <tr>
@@ -55,5 +97,4 @@ const ManagerDashboard = () => {
     </div>
   );
 };
-
 export default ManagerDashboard;

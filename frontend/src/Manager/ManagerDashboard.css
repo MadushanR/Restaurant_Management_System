@@ -19,10 +19,15 @@ button {
   border: none;
   padding: 8px 12px;
   cursor: pointer;
+  width: 20%;
 }
 
 button:hover {
   background-color: #45a049;
+}
+
+input{
+  width: 80%;
 }
 
 table {
