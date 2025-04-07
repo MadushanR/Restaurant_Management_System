@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./PlaceOrder.css";
 
 const menuItems = {
@@ -26,6 +26,9 @@ const PlaceOrder = () => {
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const storedUser = localStorage.getItem("userName");
+  const userName = storedUser || "Customer";
 
   const addToCart = (item) => {
     setCart((prevCart) => {
@@ -49,10 +52,71 @@ const PlaceOrder = () => {
   const taxAmount = totalAmount * 0.13;
   const finalTotal = totalAmount + taxAmount;
 
+  const saveOrder = async () => {
+    try {
+      await fetch("http://localhost:8080/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userName,
+          deliveryAddress,
+          pickup,
+          totalAmount,
+          taxAmount,
+          finalTotal,
+          items: cart.map((item) => `${item.quantity} x ${item.name}`),
+        }),
+      });
+    } catch (error) {
+      console.error("Error saving order:", error);
+    }
+  };
+
+  const handleSaveOrder = async () => {
+    const order = {
+      userName,
+      deliveryAddress,
+      pickup,
+      items: cart.map(item => `${item.quantity} x ${item.name}`),
+      totalAmount,
+      taxAmount,
+      finalTotal
+    };
+  
+    try {
+      const response = await fetch("http://localhost:8080/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(order)
+      });
+  
+      if (response.ok) {
+        alert("Order placed successfully!");
+        navigate("/receive-invoice", { state: order });
+      } else {
+        alert("Failed to place order. Try again.");
+      }
+    } catch (error) {
+      console.error("Error saving order:", error);
+      alert("Error occurred. Please try again.");
+    }
+  };
+
+  const handleViewInvoice = async () => {
+    await saveOrder();
+    navigate("/receive-invoice", {
+      state: { cart, totalAmount, taxAmount, finalTotal, deliveryAddress, pickup },
+    });
+  };
+
   return (
     <div className="order-container">
       <div className="order-box">
-        <h1>R.M.S.</h1>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h1>Welcome, {userName} 👋</h1>
+          <button onClick={() => navigate("/order-history")}>View Order History</button>
+        </div>
+
         <h2>Place Order</h2>
 
         <div className="menu-section">
@@ -117,15 +181,7 @@ const PlaceOrder = () => {
         </div>
 
         <div className="order-confirmation">
-          <button
-            onClick={() =>
-              navigate("/receive-invoice", {
-                state: { cart, totalAmount, taxAmount, finalTotal, deliveryAddress, pickup },
-              })
-            }
-          >
-            View Invoice
-          </button>
+          <button onClick={handleViewInvoice}>View Invoice</button>
         </div>
       </div>
     </div>

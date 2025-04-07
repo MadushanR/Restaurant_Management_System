@@ -8,6 +8,7 @@ import PlaceOrder from "./components/PlaceOrder";
 import MakePayment from "./components/MakePayment";
 import ReceiveInvoice from "./components/ReceiveInvoice";
 import ManagerDashboard from './Manager/ManagerDashboard';
+import OrderHistory from "./components/OrderHistory";
 import Navbar from './Navbar';
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/make-payment" element={<MakePayment />} />
         <Route path="/receive-invoice" element={<ReceiveInvoice />} />
+        <Route path="/order-history" element={<OrderHistory />} />
       </Routes>
     </Router>
   );
