@@ -1,0 +1,65 @@
+/* Container for the schedule page */
+.manager-schedule-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Main heading */
+  .manager-schedule-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Schedule table styling */
+  .schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .schedule-table th,
+  .schedule-table td {
+    border: 1px solid #ccc;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .schedule-table th {
+    background-color: #f4f4f4;
+  }
+  
+  /* Input field for inline schedule editing */
+  .schedule-table input[type="text"] {
+    width: 95%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Update button styling */
+  .manager-schedule-container button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .manager-schedule-container button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Button for navigating to employee management */
+  .manager-schedule-container .manage-btn {
+    margin-top: 20px;
+    display: block;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  

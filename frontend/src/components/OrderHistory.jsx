@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import "./OrderHistory.css"; // create this CSS file
+import "./OrderHistory.css"; 
 
 const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
   const userName = localStorage.getItem("userName");
 
   useEffect(() => {
-    // Ideally fetch from backend like: /api/orders?user=userName
-    fetch("http://localhost:8080/api/orders") 
-      .then(res => res.json())
-      .then(setOrders)
-      .catch(err => console.error("Error loading orders:", err));
-  }, []);
+    if (userName) {
+      fetch(`http://localhost:8080/api/orders/${userName}`)
+        .then(res => res.json())
+        .then(data => setOrders(data))
+        .catch(err => console.error("Error loading orders:", err));
+    }
+  }, [userName]);
 
   return (
     <div className="history-container">

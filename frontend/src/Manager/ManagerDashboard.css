@@ -19,17 +19,22 @@ button {
   border: none;
   padding: 8px 12px;
   cursor: pointer;
-  width: 20%;
+  flex: 1;
+  min-width: 80px;
+  margin: 5px;
 }
 
+/* Hover effect */
 button:hover {
   background-color: #45a049;
 }
 
-input{
+/* Input fields */
+input {
   width: 80%;
 }
 
+/* Table styling */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -41,3 +46,29 @@ th, td {
   padding: 10px;
   text-align: center;
 }
+
+/* Responsive adjustments */
+
+/* For small screens (mobile devices) */
+@media (max-width: 600px) {
+  .nav-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  button {
+    width: 100%;
+    /* Increase padding if desired */
+    padding: 12px 8px;
+  }
+}
+
+/* For medium screens (tablets) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  button {
+    /* You can set a relative width, for example: */
+    width: 45%;
+  }
+}
+
+/* For large screens, buttons will use flex properties defined above */

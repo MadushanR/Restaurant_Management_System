@@ -23,7 +23,9 @@ const Login = () => {
 
       if (response.status === 200) {
         const user = await response.json();
-        localStorage.setItem("userName", user.fullName); // Store fullName
+        localStorage.setItem("userId", user.id);
+        localStorage.setItem("userName", user.fullName);
+        localStorage.setItem("role", user.role);
         alert(`Welcome, ${user.fullName}!`);
         navigate("/place-order", { state: { user } });
       } else if (response.status === 401) {

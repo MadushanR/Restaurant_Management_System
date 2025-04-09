@@ -12,13 +12,17 @@ public class InventoryItem {
     private int quantity;
     private String description;
 
+    private double buying;
+    private  double selling;
     // Constructors
     public InventoryItem() {}
 
-    public InventoryItem(String name, int quantity, String description) {
+    public InventoryItem(String name, int quantity, String description, double buying, double selling) {
         this.name = name;
         this.quantity = quantity;
         this.description = description;
+        this.buying = buying;
+        this.selling = selling;
     }
 
     // Getters and Setters
@@ -45,5 +49,21 @@ public class InventoryItem {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public double getBuying() {
+        return buying;
+    }
+
+    public void setBuying(double buying) {
+        this.buying = buying;
+    }
+
+    public double getSelling() {
+        return selling;
+    }
+
+    public void setSelling(double selling) {
+        this.selling = selling;
     }
 }

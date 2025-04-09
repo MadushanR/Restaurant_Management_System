@@ -1,34 +1,40 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./PlaceOrder.css";
-
-const menuItems = {
-  Appetizers: [
-    { name: "Fries", price: 8 },
-    { name: "Onion Rings", price: 9 },
-    { name: "Chicken Wings", price: 12 },
-  ],
-  Mains: [
-    { name: "Chicken Breast", price: 25 },
-    { name: "Salmon Platter", price: 32 },
-    { name: "Main Steak", price: 35 },
-  ],
-  Drinks: [
-    { name: "Beer", price: 7 },
-    { name: "Pop", price: 3 },
-    { name: "Orange Juice", price: 5 },
-  ],
-};
 
 const PlaceOrder = () => {
   const [cart, setCart] = useState([]);
+  const [menuItems, setMenuItems] = useState([]);
   const [pickup, setPickup] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
   const storedUser = localStorage.getItem("userName");
   const userName = storedUser || "Customer";
+
+  useEffect(() => {
+    fetchMenu();
+  }, []);
+
+  const fetchMenu = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/menu");
+      setMenuItems(response.data);
+    } catch (error) {
+      console.error("Error fetching menu", error);
+    }
+  };
+
+  // Group menu items by category (or "Other")
+  const groupedMenu = menuItems.reduce((acc, item) => {
+    const category = item.category || "Other";
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(item);
+    return acc;
+  }, {});
 
   const addToCart = (item) => {
     setCart((prevCart) => {
@@ -45,68 +51,32 @@ const PlaceOrder = () => {
   };
 
   const removeFromCart = (itemName) => {
-    setCart((prevCart) => prevCart.filter((cartItem) => cartItem.name !== itemName));
+    setCart((prevCart) =>
+      prevCart.filter((cartItem) => cartItem.name !== itemName)
+    );
   };
 
-  const totalAmount = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const totalAmount = cart.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
   const taxAmount = totalAmount * 0.13;
   const finalTotal = totalAmount + taxAmount;
 
-  const saveOrder = async () => {
-    try {
-      await fetch("http://localhost:8080/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userName,
-          deliveryAddress,
-          pickup,
-          totalAmount,
-          taxAmount,
-          finalTotal,
-          items: cart.map((item) => `${item.quantity} x ${item.name}`),
-        }),
-      });
-    } catch (error) {
-      console.error("Error saving order:", error);
-    }
+  // Build order object to pass to MakePayment page.
+  const order = {
+    userName,
+    deliveryAddress,
+    pickup,
+    totalAmount,
+    taxAmount,
+    finalTotal,
+    items: cart.map((item) => `${item.quantity} x ${item.name}`)
   };
 
-  const handleSaveOrder = async () => {
-    const order = {
-      userName,
-      deliveryAddress,
-      pickup,
-      items: cart.map(item => `${item.quantity} x ${item.name}`),
-      totalAmount,
-      taxAmount,
-      finalTotal
-    };
-  
-    try {
-      const response = await fetch("http://localhost:8080/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(order)
-      });
-  
-      if (response.ok) {
-        alert("Order placed successfully!");
-        navigate("/receive-invoice", { state: order });
-      } else {
-        alert("Failed to place order. Try again.");
-      }
-    } catch (error) {
-      console.error("Error saving order:", error);
-      alert("Error occurred. Please try again.");
-    }
-  };
-
-  const handleViewInvoice = async () => {
-    await saveOrder();
-    navigate("/receive-invoice", {
-      state: { cart, totalAmount, taxAmount, finalTotal, deliveryAddress, pickup },
-    });
+  const handleProceedToPayment = () => {
+    // Navigate to MakePayment page and pass the order in state.
+    navigate("/make-payment", { state: order });
   };
 
   return (
@@ -125,12 +95,14 @@ const PlaceOrder = () => {
 
         {showMenu && (
           <div className="food-items">
-            {Object.entries(menuItems).map(([category, items]) => (
+            {Object.entries(groupedMenu).map(([category, items]) => (
               <div key={category}>
                 <h3>{category}</h3>
                 {items.map((item) => (
-                  <div key={item.name}>
-                    <span>{item.name} - ${item.price}</span>
+                  <div key={item.id}>
+                    <span>
+                      {item.name} - ${item.price}
+                    </span>
                     <button onClick={() => addToCart(item)}>Add to Cart</button>
                   </div>
                 ))}
@@ -147,7 +119,8 @@ const PlaceOrder = () => {
             <ul>
               {cart.map((item) => (
                 <li key={item.name}>
-                  {item.quantity} x {item.name} - ${item.price * item.quantity}
+                  {item.quantity} x {item.name} - $
+                  {(item.price * item.quantity).toFixed(2)}
                   <button onClick={() => removeFromCart(item.name)}>Remove</button>
                 </li>
               ))}
@@ -177,11 +150,7 @@ const PlaceOrder = () => {
 
         <div className="payment-methods">
           <label>Payment Method:</label>
-          <button onClick={() => navigate("/make-payment")}>Proceed to Payment</button>
-        </div>
-
-        <div className="order-confirmation">
-          <button onClick={handleViewInvoice}>View Invoice</button>
+          <button onClick={handleProceedToPayment}>Proceed to Payment</button>
         </div>
       </div>
     </div>

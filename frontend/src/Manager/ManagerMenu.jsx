@@ -3,16 +3,16 @@ import { useNavigate } from "react-router-dom";
 import "./ManagerDashboard.css";
 import axios from "axios";
 
-const ManagerDashboard = () => {
+const ManagerMenu = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   
+  // Updated form state to include category
   const [form, setForm] = useState({
     name: "",
-    quantity: 0,
+    price: 0,
     description: "",
-    buying: 0,
-    selling: 0,
+    category: ""
   });
   const [editingItemId, setEditingItemId] = useState(null);
 
@@ -22,7 +22,7 @@ const ManagerDashboard = () => {
 
   const fetchItems = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/inventory");
+      const response = await axios.get("http://localhost:8080/api/menu");
       setItems(response.data);
     } catch (error) {
       console.error("Error fetching items", error);
@@ -41,9 +41,9 @@ const ManagerDashboard = () => {
       setEditingItemId(null);
     } else {
       try {
-        const response = await axios.post("http://localhost:8080/api/inventory", form);
+        const response = await axios.post("http://localhost:8080/api/menu", form);
         setItems([...items, response.data]);
-        setForm({ name: "", quantity: 0, description: "", buying: 0, selling: 0 });
+        setForm({ name: "", price: 0, description: "", category: "" });
       } catch (error) {
         console.error("Error adding item", error);
       }
@@ -52,7 +52,7 @@ const ManagerDashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/inventory/${id}`);
+      await axios.delete(`http://localhost:8080/api/menu/${id}`);
       setItems(items.filter((item) => item.id !== id));
     } catch (error) {
       console.error("Error deleting item", error);
@@ -63,9 +63,9 @@ const ManagerDashboard = () => {
     e.preventDefault();
     try {
       const updatedItem = { ...form };
-      const response = await axios.put(`http://localhost:8080/api/inventory/${id}`, updatedItem);
+      const response = await axios.put(`http://localhost:8080/api/menu/${id}`, updatedItem);
       setItems(items.map(item => item.id === id ? response.data : item));
-      setForm({ name: "", quantity: 0, description: "", buying: 0, selling: 0 });
+      setForm({ name: "", price: 0, description: "", category: "" });
     } catch (error) {
       console.error("Error updating item", error);
     }
@@ -75,25 +75,24 @@ const ManagerDashboard = () => {
     setEditingItemId(item.id);
     setForm({
       name: item.name,
-      quantity: item.quantity,
+      price: item.price,
       description: item.description,
-      buying: item.buying,
-      selling: item.selling
+      category: item.category
     });
   };
 
   return (
     <div>
-      <h1>Restaurant Inventory</h1>
+      <h1>Restaurant Menu</h1>
+
       <form onSubmit={handleSubmit}>
         <table>
           <thead>
             <tr>
               <th>Item Name</th>
-              <th>Quantity</th>
+              <th>Category</th>
+              <th>Price</th>
               <th>Description</th>
-              <th>Buying Price</th>
-              <th>Selling Price</th>
               <th>{editingItemId ? "Update Item" : "Add Item"}</th>
             </tr>
           </thead>
@@ -110,11 +109,25 @@ const ManagerDashboard = () => {
                 />
               </td>
               <td>
+                <select
+                  name="category"
+                  value={form.category}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Select Category</option>
+                  <option value="Appetizers">Appetizers</option>
+                  <option value="Mains">Mains</option>
+                  <option value="Drinks">Drinks</option>
+                  <option value="Others">Others</option>
+                </select>
+              </td>
+              <td>
                 <input
                   type="number"
-                  name="quantity"
-                  placeholder="Quantity"
-                  value={form.quantity}
+                  name="price"
+                  placeholder="Price"
+                  value={form.price}
                   onChange={handleInputChange}
                   required
                 />
@@ -129,24 +142,6 @@ const ManagerDashboard = () => {
                 />
               </td>
               <td>
-                <input
-                  type="number"
-                  name="buying"
-                  placeholder="Buying Price"
-                  value={form.buying}
-                  onChange={handleInputChange}
-                />
-              </td>
-              <td>
-                <input
-                  type="number"
-                  name="selling"
-                  placeholder="Selling Price"
-                  value={form.selling}
-                  onChange={handleInputChange}
-                />
-              </td>
-              <td>
                 <button type="submit">{editingItemId ? "Update" : "Add"}</button>
               </td>
             </tr>
@@ -154,15 +149,15 @@ const ManagerDashboard = () => {
         </table>
       </form>
 
-      <h2>Inventory List</h2>
+      <h2>Menu List</h2>
       <table>
         <thead>
           <tr>
             <th>Item No</th>
             <th>Item Name</th>
-            <th>Quantity Available</th>
-            <th>Buying Price</th>
-            <th>Selling Price</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Price</th>
             <th>Delete</th>
             <th>Edit</th>
           </tr>
@@ -172,15 +167,11 @@ const ManagerDashboard = () => {
             <tr key={item.id}>
               <td>{item.id}</td>
               <td>{item.name}</td>
-              <td>{item.quantity}</td>
-              <td>${item.buying}</td>
-              <td>${item.selling}</td>
-              <td>
-                <button onClick={() => handleDelete(item.id)}>Delete</button>
-              </td>
-              <td>
-                <button onClick={() => handleEditClick(item)}>Edit</button>
-              </td>
+              <td>{item.category}</td>
+              <td>{item.description}</td>
+              <td>${item.price}</td>
+              <td><button onClick={() => handleDelete(item.id)}>Delete</button></td>
+              <td><button onClick={() => handleEditClick(item)}>Edit</button></td>
             </tr>
           ))}
         </tbody>
@@ -189,4 +180,4 @@ const ManagerDashboard = () => {
   );
 };
 
-export default ManagerDashboard;
+export default ManagerMenu;

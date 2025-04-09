@@ -34,6 +34,7 @@ const Register = () => {
           phone: formData.phone,
           userName: formData.userName,
           password: formData.password,
+          role: "customer"
         }),
       });
 
